@@ -1,0 +1,10 @@
+content:
+  - name: homepage
+    label: Home Page
+    path: index.html
+    type: file
+    format: raw
+    fields:
+      - name: body
+        label: Page Content
+        type: rich-text
