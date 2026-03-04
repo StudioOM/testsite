@@ -5,7 +5,7 @@ settings:
 content:
   - name: homepage
     label: Home Page
-    path: index.html # or your filename
+    path: index.html
     type: file
     format: raw
     fields:
