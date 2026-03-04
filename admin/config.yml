@@ -12,7 +12,7 @@ collections:
     files:
       - name: "home"
         label: "Home Page"
-        file: "index.html"
+        file: "_data/home.yml"
         fields:
           - {label: "Hero Title", name: "hero_title", widget: "string"}
           - {label: "Hero Subtitle", name: "hero_subtitle", widget: "string"}
