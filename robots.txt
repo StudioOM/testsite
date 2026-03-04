@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://studioomla.org/testsite/sitemap.xml

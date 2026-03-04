@@ -1,0 +1,13 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "Studio Om",
+    "description": "",
+    "home_page_url": "https://studioomla.org/testsite",
+    "feed_url": "https://studioomla.org/testsite/feed.json",
+    "user_comment": "",
+    "author": {
+        "name": "Yoga Matt"
+    },
+    "items": [
+    ]
+}
