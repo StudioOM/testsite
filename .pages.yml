@@ -1,10 +1,20 @@
+settings:
+  content:
+    merge: true
+
 content:
   - name: homepage
     label: Home Page
-    path: index.html
+    path: index.html # or your filename
     type: file
     format: raw
     fields:
-      - name: body
-        label: Page Content
+      - name: hero_title
+        label: Hero Title
+        type: string
+      - name: hero_subtitle
+        label: Hero Subtitle
+        type: string
+      - name: vision_text
+        label: Our Vision Text
         type: rich-text
