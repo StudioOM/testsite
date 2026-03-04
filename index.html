@@ -1,342 +1,216 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Instagram, Mail, Phone, MapPin, ChevronDown, ArrowRight, ExternalLink } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Om | Wellness Lounge Los Angeles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0A1118; color: #f1f5f9; scroll-behavior: smooth; }
+        
+        /* Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 30s linear infinite;
+        }
 
-// --- CUSTOM CSS ---
-const customStyles = `
-  @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
-  }
-  .animate-marquee {
-    display: inline-block;
-    white-space: nowrap;
-    animation: marquee 30s linear infinite;
-  }
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-`;
+        /* Hide Scrollbars */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-export default function App() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+        .glass-nav {
+            background: rgba(10, 17, 24, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+        .hero-video-overlay {
+            background: linear-gradient(to bottom, rgba(10, 17, 24, 0.4), rgba(10, 17, 24, 0.8));
+        }
+    </style>
+</head>
+<body>
 
-  return (
-    <div className="min-h-screen bg-[#0A1118] text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
-      <style>{customStyles}</style>
-
-      {/* --- NAVIGATION --- */}
-      <nav className={`fixed w-full z-50 transition-all duration-500 ${isScrolled ? 'bg-[#0A1118]/95 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            {/* LOGO PLACEHOLDER */}
-            <div className="h-10 w-10 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/50">
-              <span className="text-[10px] uppercase tracking-tighter">Logo</span>
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="h-10 w-10 bg-blue-500/20 rounded-full flex items-center justify-center border border-blue-500/50">
+                    <span class="text-[10px] uppercase tracking-tighter">OM</span>
+                </div>
+                <a href="#" class="text-xl font-light tracking-[0.3em] uppercase hidden sm:block">Studio Om</a>
             </div>
-            <a href="#" className="text-xl font-light tracking-[0.3em] uppercase hidden sm:block">Studio Om</a>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-8 text-[11px] tracking-[0.2em] uppercase text-slate-300 font-medium">
-            <a href="#vision" className="hover:text-white transition-colors">Vision</a>
-            <a href="#offerings" className="hover:text-white transition-colors">Offerings</a>
-            <a href="#memberships" className="hover:text-white transition-colors">Rates</a>
-            <a href="#schedule" className="hover:text-white transition-colors">Schedule</a>
-            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-            <button className="bg-white text-[#0A1118] px-6 py-2.5 rounded-full hover:bg-slate-200 transition-colors">
-              Book Now
-            </button>
-          </div>
-
-          <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            
+            <div class="hidden md:flex items-center gap-8 text-[11px] tracking-[0.2em] uppercase text-slate-300 font-medium">
+                <a href="#vision" class="hover:text-white transition-colors">Vision</a>
+                <a href="#offerings" class="hover:text-white transition-colors">Offerings</a>
+                <a href="#memberships" class="hover:text-white transition-colors">Rates</a>
+                <a href="#schedule" class="hover:text-white transition-colors">Schedule</a>
+                <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+                <button class="bg-white text-[#0A1118] px-6 py-2.5 rounded-full hover:bg-slate-200 transition-colors">
+                    Book Now
+                </button>
+            </div>
         </div>
-      </nav>
+    </nav>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-[#0A1118] z-40 flex flex-col items-center justify-center gap-8 uppercase tracking-[0.3em] text-sm">
-          <a href="#vision" onClick={() => setMobileMenuOpen(false)}>Vision</a>
-          <a href="#offerings" onClick={() => setMobileMenuOpen(false)}>Offerings</a>
-          <a href="#memberships" onClick={() => setMobileMenuOpen(false)}>Rates</a>
-          <a href="#schedule" onClick={() => setMobileMenuOpen(false)}>Schedule</a>
-          <button className="bg-white text-[#0A1118] px-10 py-4 rounded-full mt-4">Book Now</button>
-        </div>
-      )}
-
-      {/* --- HERO SECTION --- */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 z-10" />
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src="https://videos.ctfassets.net/xlosfajxk15z/5MdWF0lp3UghDBqNta13pI/b331ef88e7b24f333af182d66e3b3290/heroBackground-6MB.mp4" type="video/mp4" />
+    <!-- HERO SECTION -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 hero-video-overlay z-10"></div>
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+            <source src="https://videos.ctfassets.net/xlosfajxk15z/5MdWF0lp3UghDBqNta13pI/b331ef88e7b24f333af182d66e3b3290/heroBackground-6MB.mp4" type="video/mp4">
         </video>
         
-        <div className="relative z-20 text-center px-6 mt-20">
-          <h1 className="text-6xl md:text-9xl font-light tracking-tighter mb-6 italic">
-            Feed Your Soul
-          </h1>
-          <p className="text-sm md:text-base tracking-[0.4em] uppercase text-blue-400 font-light">
-            Wellness Lounge • Los Angeles
-          </p>
-        </div>
-        
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce opacity-50">
-          <ChevronDown size={30} />
-        </div>
-      </section>
-
-      {/* --- MARQUEE --- */}
-      <div className="bg-[#14202D] py-5 border-y border-slate-800 overflow-hidden flex whitespace-nowrap">
-        <div className="animate-marquee flex gap-12 items-center text-[11px] tracking-[0.3em] uppercase text-slate-400">
-          <span>Conscious Events & Wellness Lounge</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-          <span>Easing Stress, Anxiety & Inspiring Self-Growth</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-          <span>Conscious Events & Wellness Lounge</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-          <span>Easing Stress, Anxiety & Inspiring Self-Growth</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-        </div>
-      </div>
-
-      {/* --- SECTION: OUR VISION (With Photo) --- */}
-      <section id="vision" className="py-24 md:py-40 px-6 max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative group">
-            {/* VRAJA & KUNJA PHOTO PLACEHOLDER */}
-            <div className="aspect-[4/5] bg-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-              <img 
-                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000" 
-                alt="Vraja and Kunja" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
-          </div>
-          
-          <div className="space-y-8">
-            <h2 className="text-sm tracking-[0.4em] uppercase text-blue-400">Our Vision</h2>
-            <h3 className="text-3xl md:text-5xl font-light leading-tight">
-              A non-judgmental space to deepen your practice.
-            </h3>
-            <div className="space-y-6 text-slate-400 leading-loose font-light">
-              <p className="text-xl text-slate-200">
-                "Our vision is to create a space for young people in Los Angeles to care for their inner-wellbeing through yoga, soundbaths, empowering workshops & good food."
-              </p>
-              <p>
-                Hiii we are Vraja & Kunja, the owners of Studio Om. Not many people know it but yoga is grounded in the timeless science of Bhakti, wisdom for genuine self-growth, happiness and connection to the love supreme.
-              </p>
-              <p>
-                See you in the studio soon xx
-              </p>
-              <button className="flex items-center gap-4 text-white tracking-[0.2em] uppercase text-xs pt-4 group">
-                Find out more <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- SECTION: OFFERINGS --- */}
-      <section id="offerings" className="py-24 bg-[#0D1620]">
-        <div className="max-w-7xl mx-auto px-6 mb-16 flex justify-between items-end">
-          <div>
-            <h2 className="text-sm tracking-[0.4em] uppercase text-blue-400 mb-4">Experience</h2>
-            <h3 className="text-4xl md:text-6xl font-light">Nourish your being.</h3>
-          </div>
-        </div>
-        
-        <div className="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 pb-12 gap-8 max-w-7xl mx-auto">
-          {[
-            { title: "Vinyasa Flow Yoga", desc: "Flow with breath to movement in this all levels vinyasa yoga class." },
-            { title: "Soundbath", desc: "An immersive sound frequency healing experience, therapeutic to the body and mind." },
-            { title: "Soulfeast", desc: "Our weekly conscious party night - mantra music, wisdom talk and delicious plant-based dinner." },
-            { title: "Tea & Talk", desc: "A thoughtfully designed wellness sanctuary where movement meets reflection." },
-            { title: "Sunday Reset", desc: "An intentional evening designed to help you enter the week grounded." }
-          ].map((item, i) => (
-            <div key={i} className="min-w-[320px] md:min-w-[450px] snap-center bg-[#14202D] p-12 rounded-3xl border border-slate-800 hover:border-blue-500/40 transition-all group">
-              <h4 className="text-2xl font-light mb-6 tracking-wide italic">{item.title}</h4>
-              <p className="text-slate-400 leading-relaxed font-light mb-8">{item.desc}</p>
-              <div className="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center text-slate-500 group-hover:border-blue-500 group-hover:text-blue-400 transition-colors">
-                <ArrowRight size={16} />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- SECTION: MEMBERSHIPS --- */}
-      <section id="memberships" className="py-24 md:py-40 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-sm tracking-[0.4em] uppercase text-blue-400 mb-4">Pricing</h2>
-          <h3 className="text-4xl md:text-6xl font-light">Memberships</h3>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-[#14202D] p-12 rounded-3xl border border-slate-800 flex flex-col hover:bg-[#162433] transition-colors">
-            <h4 className="text-xs tracking-[0.3em] uppercase text-slate-500 mb-8">Drop In</h4>
-            <div className="flex items-baseline gap-2 mb-8">
-              <span className="text-6xl font-light">$20</span>
-              <span className="text-slate-500 uppercase text-[10px] tracking-widest">/ session</span>
-            </div>
-            <ul className="space-y-4 mb-12 text-sm text-slate-400 font-light flex-grow">
-              <li className="flex items-center gap-3">Student Drop-in $15</li>
-              <li className="flex items-center gap-3">Mats available for $1 hire</li>
-              <li className="flex items-center gap-3">Plant-based snacks</li>
-            </ul>
-            <button className="w-full py-4 rounded-full border border-slate-700 hover:border-white transition-colors uppercase text-[10px] tracking-widest">Select</button>
-          </div>
-
-          <div className="bg-gradient-to-b from-[#1E2E3F] to-[#14202D] p-12 rounded-3xl border border-blue-500/30 flex flex-col relative transform md:-translate-y-6">
-            <h4 className="text-[10px] tracking-[0.3em] uppercase text-blue-400 mb-8">Monthly Unlimited</h4>
-            <div className="flex items-baseline gap-2 mb-8">
-              <span className="text-6xl font-light">$69</span>
-              <span className="text-slate-500 uppercase text-[10px] tracking-widest">/ month</span>
-            </div>
-            <ul className="space-y-4 mb-12 text-sm text-slate-200 font-light flex-grow">
-              <li>Student Monthly $49</li>
-              <li>Access to 40+ classes & events</li>
-              <li>Lounge access to study/hangout</li>
-              <li>Includes yoga mat rentals</li>
-              <li>Plant-based food & drinks</li>
-              <li>First week = FREE buddy pass</li>
-            </ul>
-            <button className="w-full py-4 rounded-full bg-white text-black hover:bg-slate-200 transition-colors uppercase text-[10px] tracking-[0.2em] font-bold">Get Started</button>
-          </div>
-
-          <div className="bg-[#14202D] p-12 rounded-3xl border border-slate-800 flex flex-col hover:bg-[#162433] transition-colors">
-            <h4 className="text-xs tracking-[0.3em] uppercase text-slate-500 mb-8">Student Semester</h4>
-            <div className="flex items-baseline gap-2 mb-8">
-              <span className="text-6xl font-light">$89</span>
-              <span className="text-slate-500 uppercase text-[10px] tracking-widest">/ semester</span>
-            </div>
-            <ul className="space-y-4 mb-12 text-sm text-slate-400 font-light flex-grow">
-              <li>Full semester unlimited access</li>
-              <li>Access to 120+ classes & events</li>
-              <li>Lounge access to study/hangout</li>
-              <li>Plant-based food</li>
-            </ul>
-            <button className="w-full py-4 rounded-full border border-slate-700 hover:border-white transition-colors uppercase text-[10px] tracking-widest">Select</button>
-          </div>
-        </div>
-      </section>
-
-      {/* --- SECTION: MEET THE TEAM --- */}
-      <section className="py-24 bg-[#0D1620] px-6">
-        <div className="max-w-7xl mx-auto">
-           <h2 className="text-sm tracking-[0.4em] uppercase text-blue-400 mb-12 text-center">Meet the Team</h2>
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { name: "Vraja", role: "Co-Owner" },
-                { name: "Kunja", role: "Co-Owner" },
-                { name: "Yoga Instructor", role: "Volunteer" },
-                { name: "Sound Healer", role: "Volunteer" }
-              ].map((member, i) => (
-                <div key={i} className="text-center group">
-                  <div className="aspect-square bg-[#14202D] rounded-full mb-6 overflow-hidden border border-slate-800 group-hover:border-blue-500/50 transition-colors">
-                    {/* Member Photo Placeholder */}
-                    <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-600 italic">Photo</div>
-                  </div>
-                  <h4 className="text-lg font-light tracking-wide">{member.name}</h4>
-                  <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">{member.role}</p>
-                </div>
-              ))}
-           </div>
-        </div>
-      </section>
-
-      {/* --- SECTION: SCHEDULE --- */}
-      <section id="schedule" className="py-24 px-6 max-w-4xl mx-auto">
-        <h2 className="text-sm tracking-[0.4em] uppercase text-blue-400 mb-16 text-center">Class Schedule</h2>
-        <div className="space-y-12">
-          {[
-            { day: "Tuesday", items: [{ t: "6:30 PM", n: "Vinyasa Flow" }, { t: "7:30 PM", n: "Tea & Talk" }] },
-            { day: "Wednesday", items: [{ t: "6:30 PM", n: "Gentle Stretch" }, { t: "7:30 PM", n: "Soundbath" }] },
-            { day: "Thursday", items: [{ t: "6:30 PM", n: "Vinyasa Flow" }, { t: "7:30 PM", n: "Soulfeast" }] },
-            { day: "Saturday", items: [{ t: "6:30 PM", n: "Restorative Flow" }, { t: "7:30 PM", n: "Wellness Workshop" }] }
-          ].map((day, i) => (
-            <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-800 last:border-0">
-              <h3 className="text-2xl font-light italic tracking-tight">{day.day}</h3>
-              <div className="md:col-span-2 space-y-6">
-                {day.items.map((item, j) => (
-                  <div key={j} className="flex justify-between items-center group cursor-pointer">
-                    <div className="flex gap-6 items-baseline">
-                      <span className="text-blue-400 font-mono text-xs">{item.t}</span>
-                      <span className="text-lg font-light group-hover:translate-x-2 transition-transform">{item.n}</span>
-                    </div>
-                    <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-20 text-center">
-            <button className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-xs font-bold tracking-widest uppercase hover:bg-blue-400 transition-colors">
-              Book via Zeffy <ExternalLink size={14} />
-            </button>
-        </div>
-      </section>
-
-      {/* --- FOOTER --- */}
-      <footer className="bg-[#0A1118] border-t border-slate-900 pt-24 pb-12 px-6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-20">
-          <div className="md:col-span-1">
-            <div className="h-8 w-8 bg-blue-500/20 rounded-full mb-6 border border-blue-500/50"></div>
-            <h2 className="text-xl font-light tracking-[0.3em] uppercase mb-4">Studio Om</h2>
-            <p className="text-slate-500 text-xs leading-relaxed uppercase tracking-widest font-medium">
-              Easing stress, anxiety & inspiring self-growth.
+        <div class="relative z-20 text-center px-6 mt-20">
+            <h1 class="text-6xl md:text-9xl font-light tracking-tighter mb-6 italic">Feed Your Soul</h1>
+            <p class="text-sm md:text-base tracking-[0.4em] uppercase text-blue-400 font-light">
+                Wellness Lounge • Los Angeles
             </p>
-          </div>
-          
-          <div>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-6">Contact</h3>
-            <ul className="text-xs space-y-4 text-slate-500">
-              <li className="flex gap-3 items-center hover:text-white transition-colors cursor-pointer"><Mail size={14} /> studio.om.losangeles@gmail.com</li>
-              <li className="flex gap-3 items-center hover:text-white transition-colors cursor-pointer"><Phone size={14} /> (+1) 213-357-7323</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-6">Address</h3>
-            <p className="text-xs text-slate-500 leading-loose flex gap-3">
-              <MapPin size={14} className="shrink-0" />
-              2316 1/2 S Union Ave, Suite 1<br />Los Angeles, CA
-            </p>
-          </div>
-
-          <div>
-            <h3 className="text-[10px] tracking-[0.3em] uppercase text-slate-400 mb-6">Instagram</h3>
-            <a href="https://www.instagram.com/studioomla/" className="inline-flex gap-2 items-center text-xs text-slate-500 hover:text-white transition-colors group">
-              @studioomla <Instagram size={14} className="group-hover:rotate-12 transition-transform" />
-            </a>
-          </div>
         </div>
-        
-        <div className="max-w-7xl mx-auto pt-8 border-t border-slate-900/50 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] tracking-[0.2em] uppercase text-slate-600">
-          <p>© {new Date().getFullYear()} Studio Om. 501(c)(3) Non-Profit.</p>
-          <div className="flex gap-8">
-             <a href="#faq" className="hover:text-white">FAQ</a>
-             <a href="#" className="hover:text-white">Privacy</a>
-             <a href="#" className="hover:text-white">Terms</a>
-          </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="bg-[#14202D] py-5 border-y border-slate-800 overflow-hidden flex whitespace-nowrap">
+        <div class="animate-marquee flex gap-12 items-center text-[11px] tracking-[0.3em] uppercase text-slate-400">
+            <span>Conscious Events & Wellness Lounge</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+            <span>Easing Stress, Anxiety & Inspiring Self-Growth</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+            <span>Conscious Events & Wellness Lounge</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+            <span>Easing Stress, Anxiety & Inspiring Self-Growth</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
         </div>
-      </footer>
     </div>
-  );
-}
+
+    <!-- OUR VISION -->
+    <section id="vision" class="py-24 md:py-40 px-6 max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="relative group">
+                <div class="aspect-[4/5] bg-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+                    <!-- Replace with Vraja & Kunja Photo -->
+                    <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1000" alt="Vraja and Kunja" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+            </div>
+            
+            <div class="space-y-8">
+                <h2 class="text-sm tracking-[0.4em] uppercase text-blue-400">Our Vision</h2>
+                <h3 class="text-3xl md:text-5xl font-light leading-tight italic">A space to deepen your practice.</h3>
+                <div class="space-y-6 text-slate-400 leading-loose font-light">
+                    <p class="text-xl text-slate-200">
+                        "Our vision is to create a space for young people in Los Angeles to care for their inner-wellbeing through yoga, soundbaths, empowering workshops & good food."
+                    </p>
+                    <p>
+                        Hiii we are Vraja & Kunja, the owners of Studio Om. Not many people know it but yoga is grounded in the timeless science of Bhakti, wisdom for genuine self-growth, happiness and connection to the love supreme.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OFFERINGS -->
+    <section id="offerings" class="py-24 bg-[#0D1620]">
+        <div class="max-w-7xl mx-auto px-6 mb-16">
+            <h2 class="text-sm tracking-[0.4em] uppercase text-blue-400 mb-4">Experience</h2>
+            <h3 class="text-4xl md:text-6xl font-light">Nourish your being.</h3>
+        </div>
+        
+        <div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-6 pb-12 gap-8 max-w-7xl mx-auto">
+            <div class="min-w-[320px] md:min-w-[450px] snap-center bg-[#14202D] p-12 rounded-3xl border border-slate-800">
+                <h4 class="text-2xl font-light mb-6 tracking-wide italic">Vinyasa Flow Yoga</h4>
+                <p class="text-slate-400 leading-relaxed font-light">Flow with breath to movement in this all levels vinyasa yoga class.</p>
+            </div>
+            <div class="min-w-[320px] md:min-w-[450px] snap-center bg-[#14202D] p-12 rounded-3xl border border-slate-800">
+                <h4 class="text-2xl font-light mb-6 tracking-wide italic">Soundbath</h4>
+                <p class="text-slate-400 leading-relaxed font-light">An immersive sound frequency healing experience, therapeutic to the body and mind.</p>
+            </div>
+            <div class="min-w-[320px] md:min-w-[450px] snap-center bg-[#14202D] p-12 rounded-3xl border border-slate-800">
+                <h4 class="text-2xl font-light mb-6 tracking-wide italic">Soulfeast</h4>
+                <p class="text-slate-400 leading-relaxed font-light">Our weekly conscious party night - mantra music, wisdom talk and delicious plant-based dinner.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MEMBERSHIPS -->
+    <section id="memberships" class="py-24 md:py-40 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20">
+            <h2 class="text-sm tracking-[0.4em] uppercase text-blue-400 mb-4">Pricing</h2>
+            <h3 class="text-4xl md:text-6xl font-light">Memberships</h3>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-[#14202D] p-12 rounded-3xl border border-slate-800 flex flex-col">
+                <h4 class="text-[10px] tracking-[0.3em] uppercase text-slate-500 mb-8">Drop In</h4>
+                <div class="text-6xl font-light mb-8">$20</div>
+                <ul class="space-y-4 mb-12 text-sm text-slate-400 font-light flex-grow">
+                    <li>Student Drop-in $15</li>
+                    <li>Mats available for $1 hire</li>
+                </ul>
+                <button class="w-full py-4 rounded-full border border-slate-700 hover:border-white transition-colors uppercase text-[10px] tracking-widest">Select</button>
+            </div>
+
+            <div class="bg-gradient-to-b from-[#1E2E3F] to-[#14202D] p-12 rounded-3xl border border-blue-500/30 flex flex-col relative transform md:-translate-y-6">
+                <h4 class="text-[10px] tracking-[0.3em] uppercase text-blue-400 mb-8">Monthly Unlimited</h4>
+                <div class="text-6xl font-light mb-8">$69</div>
+                <ul class="space-y-4 mb-12 text-sm text-slate-200 font-light flex-grow">
+                    <li>Student Monthly $49</li>
+                    <li>Access to 40+ classes & events</li>
+                    <li>Includes yoga mat rentals</li>
+                    <li>Plant-based food & drinks</li>
+                </ul>
+                <button class="w-full py-4 rounded-full bg-white text-black uppercase text-[10px] tracking-widest font-bold">Get Started</button>
+            </div>
+
+            <div class="bg-[#14202D] p-12 rounded-3xl border border-slate-800 flex flex-col">
+                <h4 class="text-[10px] tracking-[0.3em] uppercase text-slate-500 mb-8">Student Semester</h4>
+                <div class="text-6xl font-light mb-8">$89</div>
+                <ul class="space-y-4 mb-12 text-sm text-slate-400 font-light flex-grow">
+                    <li>Full semester unlimited access</li>
+                    <li>Lounge access to study/hangout</li>
+                </ul>
+                <button class="w-full py-4 rounded-full border border-slate-700 hover:border-white transition-colors uppercase text-[10px] tracking-widest">Select</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#0A1118] border-t border-slate-900 pt-24 pb-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12 text-slate-500">
+            <div>
+                <h2 class="text-xl text-white font-light tracking-[0.3em] uppercase mb-4">Studio Om</h2>
+                <p class="text-xs uppercase tracking-widest">Easing stress, anxiety & inspiring self-growth.</p>
+            </div>
+            <div class="text-xs space-y-2 uppercase tracking-widest">
+                <p>studio.om.losangeles@gmail.com</p>
+                <p>(+1) 213-357-7323</p>
+                <p>2316 1/2 S Union Ave, Suite 1</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-slate-900/50 text-[10px] tracking-widest uppercase text-slate-600">
+            © 2024 Studio Om. 501(c)(3) Non-Profit.
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.onscroll = function() {
+            var nav = document.getElementById('navbar');
+            if (window.pageYOffset > 50) {
+                nav.classList.add('glass-nav', 'py-4');
+                nav.classList.remove('py-6');
+            } else {
+                nav.classList.remove('glass-nav', 'py-4');
+                nav.classList.add('py-6');
+            }
+        };
+    </script>
+</body>
+</html>
