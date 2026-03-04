@@ -2,7 +2,10 @@ backend:
   name: github
   repo: StudioOM/testsite
   branch: main
-
+# Add these two lines to stop it from going to Netlify
+  base_url: https://api.github.com
+  auth_type: implicit
+  
 media_folder: "images"
 public_folder: "/images"
 
