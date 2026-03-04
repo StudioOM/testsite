@@ -1,20 +1,10 @@
-settings:
-  content:
-    merge: true
-
 content:
   - name: homepage
-    label: Home Page
+    label: Full Page Editor
     path: index.html
     type: file
     format: raw
     fields:
-      - name: hero_title
-        label: Hero Title
-        type: string
-      - name: hero_subtitle
-        label: Hero Subtitle
-        type: string
-      - name: vision_text
-        label: Our Vision Text
+      - name: body
+        label: Page Content
         type: rich-text
