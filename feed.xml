@@ -3,10 +3,22 @@
     <title>Studio Om</title>
     <link href="https://studioomla.org/testsite/feed.xml" rel="self" />
     <link href="https://studioomla.org/testsite" />
-    <updated>1969-12-31T16:00:00-08:00</updated>
+    <updated>2026-03-04T16:01:52-08:00</updated>
     <author>
         <name>Yoga Matt</name>
     </author>
     <id>https://studioomla.org/testsite</id>
 
+    <entry>
+        <title>hghkgi</title>
+        <author>
+            <name>Yoga Matt</name>
+        </author>
+        <link href="https://studioomla.org/testsite/hghkgi.html"/>
+        <id>https://studioomla.org/testsite/hghkgi.html</id>
+
+        <updated>2026-03-04T16:01:52-08:00</updated>
+            <summary></summary>
+        <content></content>
+    </entry>
 </feed>
