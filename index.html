@@ -212,6 +212,44 @@
             }
         };
     </script>
+
+    <div id="gjs" style="display:none; height: 100vh;"></div>
+    <script>
+    // 1. Check if "?edit" is in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlParams.has('edit')) {
+        // 2. Hide the live website content
+        document.getElementById('site-content').style.display = 'none'; // Ensure your main content is wrapped in a div with id="site-content"
+        document.getElementById('gjs').style.display = 'block';
+
+        // 3. Dynamically load GrapesJS CSS & JS
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'https://unpkg.com/grapesjs/dist/css/grapes.min.css';
+        document.head.appendChild(css);
+
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/grapesjs';
+        script.onload = () => {
+        // 4. Initialize the editor with the current page's HTML
+        window.editor = grapesjs.init({
+            container: '#gjs',
+            components: document.getElementById('site-content').innerHTML,
+            storageManager: false, // We will build our own GitHub save button
+        });
+        
+        // Add the custom save button to the top panel
+        editor.Panels.addButton('options', [{
+            id: 'save-github',
+            className: 'fa fa-floppy-o',
+            command: 'save-to-github',
+            attributes: { title: 'Commit to GitHub' }
+        }]);
+        };
+        document.head.appendChild(script);
+    }
+    </script>
 </body>
 </html>
 
