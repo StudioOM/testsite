@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Studio Om - Admin Editor</title>
+    <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/grapesjs"></script>
+    <style>
+        body, html { height: 100%; margin: 0; }
+        #gjs { height: 100%; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div id="gjs"></div>
+
+    <script>
+        const editor = grapesjs.init({
+            container: '#gjs',
+            height: '100%',
+            fromElement: true,
+            storageManager: false,
+        });
+
+        // Add the GitHub Save Button
+        editor.Panels.addButton('options', [{
+            id: 'save-github',
+            className: 'fa fa-floppy-o', // Use FontAwesome if you link it, or text
+            label: '<b>SAVE TO GITHUB</b>',
+            command: 'save-to-github',
+            attributes: { title: 'Commit changes to GitHub' }
+        }]);
+
+        editor.Commands.add('save-to-github', {
+            run: async function(editor, sender) {
+                sender && sender.set('active', 0);
+                
+                let token = localStorage.getItem('gh_pat');
+                if (!token) {
+                    token = prompt('Enter your GitHub PAT:');
+                    if (!token) return;
+                    localStorage.setItem('gh_pat', token);
+                }
+
+                // Configuration
+                const owner = 'StudioOM'; 
+                const repo = 'testsite';
+                const path = 'index.html'; // This tells GrapesJS to save OVER the root index.html
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+                try {
+                    // 1. Get SHA of the root index.html
+                    const getRes = await fetch(apiUrl, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const fileData = await getRes.json();
+                    const sha = fileData.sha;
+
+                    // 2. Format the content to be saved
+                    // We wrap it in a div so it stays clean for next time
+                    const newHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>${editor.getCss()}</style>
+</head>
+<body>
+    <div id="site-content">
+        ${editor.getHtml()}
+    </div>
+</body>
+</html>`;
+
+                    const encodedContent = btoa(unescape(encodeURIComponent(newHtml)));
+
+                    // 3. Push the commit
+                    const putRes = await fetch(apiUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'Updated site via GrapesJS Admin',
+                            content: encodedContent,
+                            sha: sha
+                        })
+                    });
+
+                    if (putRes.ok) alert('Saved! Site updates in ~1 minute.');
+                    else alert('Error saving: ' + (await putRes.json()).message);
+
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            }
+        });
+
+        // OPTIONAL: Load the current content of root index.html into the editor on startup
+        fetch('../index.html')
+            .then(res => res.text())
+            .then(html => {
+                // Extract only the content inside your site-content div if you have one
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const content = doc.getElementById('site-content')?.innerHTML || html;
+                editor.setComponents(content);
+            });
+    </script>
+</body>
+</html>
