@@ -2,84 +2,126 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Studio Om - Admin Editor</title>
+    <title>Studio Om - Pro Admin</title>
     <link href="https://unpkg.com/grapesjs/dist/css/grapes.min.css" rel="stylesheet">
     <script src="https://unpkg.com/grapesjs"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        body, html { height: 100%; margin: 0; }
-        #gjs { height: 100%; overflow: hidden; }
+        body, html { height: 100%; margin: 0; overflow: hidden; }
+        #gjs { height: 100%; }
+        .file-select-container { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); z-index: 999; }
+        select { padding: 5px; border-radius: 4px; border: 1px solid #444; background: #333; color: white; }
     </style>
 </head>
 <body>
+    <div class="file-select-container">
+        <select id="file-selector">
+            <option value="">-- Select Page to Edit --</option>
+        </select>
+    </div>
+    
     <div id="gjs"></div>
 
     <script>
+        // --- CONFIGURATION ---
+        const owner = 'StudioOM'; 
+        const repo = 'testsite';
+        let currentPath = 'index.html'; // Default
+
         const editor = grapesjs.init({
             container: '#gjs',
             height: '100%',
-            fromElement: true,
             storageManager: false,
+            // TAILWIND FIX 1: Load Tailwind inside the editor canvas
             canvas: {
-                styles: [
-                'https://cdn.jsdelivr.net', // Use a specific version for stability
-                ],
-                scripts: [
-                'https://cdn.tailwindcss.com', // Optional: Play CDN for just-in-time (JIT) compilation in dev
-                ],
-            },
+                scripts: ['https://cdn.tailwindcss.com'],
+            }
         });
 
-        // Add the GitHub Save Button
+        // --- FILE SELECTOR LOGIC ---
+        const fileSelector = document.getElementById('file-selector');
+
+        async function loadFileList() {
+            const token = localStorage.getItem('gh_pat');
+            if (!token) return;
+
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const files = await res.json();
+            
+            // Filter for HTML files
+            files.filter(f => f.name.endsWith('.html')).forEach(file => {
+                const opt = document.createElement('option');
+                opt.value = file.path;
+                opt.textContent = file.name;
+                fileSelector.appendChild(opt);
+            });
+        }
+
+        fileSelector.addEventListener('change', async (e) => {
+            currentPath = e.target.value;
+            if (!currentPath) return;
+
+            const res = await fetch(`../${currentPath}`);
+            const html = await res.text();
+            
+            // Extract body content to avoid nesting <html> tags
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const bodyContent = doc.body.innerHTML;
+            
+            editor.setComponents(bodyContent);
+            // Also grab styles if there are any
+            const styles = doc.querySelector('style')?.innerHTML || '';
+            editor.setStyle(styles);
+        });
+
+        // --- UPGRADED SAVE COMMAND ---
         editor.Panels.addButton('options', [{
             id: 'save-github',
-            className: 'fa fa-floppy-o', // Use FontAwesome if you link it, or text
+            className: 'fa fa-floppy-o',
+            label: ' SAVE',
             command: 'save-to-github',
-            attributes: { title: 'Save to GitHub' }
         }]);
 
         editor.Commands.add('save-to-github', {
             run: async function(editor, sender) {
                 sender && sender.set('active', 0);
-                
-                let token = localStorage.getItem('gh_pat');
+                const token = localStorage.getItem('gh_pat');
                 if (!token) {
-                    token = prompt('Enter your GitHub PAT:');
-                    if (!token) return;
-                    localStorage.setItem('gh_pat', token);
+                    const t = prompt('Enter GitHub PAT:');
+                    if(t) localStorage.setItem('gh_pat', t);
+                    else return;
                 }
 
-                // Configuration
-                const owner = 'StudioOM'; 
-                const repo = 'testsite';
-                const path = 'index.html'; // This tells GrapesJS to save OVER the root index.html
-                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${currentPath}`;
 
                 try {
-                    // 1. Get SHA of the root index.html
+                    // 1. Get the current full file to preserve the <head>
                     const getRes = await fetch(apiUrl, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     const fileData = await getRes.json();
-                    const sha = fileData.sha;
+                    const oldContent = decodeURIComponent(escape(atob(fileData.content)));
+                    
+                    // 2. Parse the old file and swap the body with GrapesJS content
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(oldContent, 'text/html');
+                    
+                    // TAILWIND FIX 2: We inject the GrapesJS HTML and the generated CSS 
+                    // into the body, leaving the head (with Tailwind config) alone.
+                    doc.body.innerHTML = `
+                        <div id="site-content">
+                            ${editor.getHtml()}
+                            <style>${editor.getCss()}</style>
+                        </div>
+                    `;
 
-                    // 2. Format the content to be saved
-                    // We wrap it in a div so it stays clean for next time
-                    const newHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <style>${editor.getCss()}</style>
-</head>
-<body>
-    <div id="site-content">
-        ${editor.getHtml()}
-    </div>
-</body>
-</html>`;
+                    const finalHtml = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+                    const encodedContent = btoa(unescape(encodeURIComponent(finalHtml)));
 
-                    const encodedContent = btoa(unescape(encodeURIComponent(newHtml)));
-
-                    // 3. Push the commit
+                    // 3. Push to GitHub
                     const putRes = await fetch(apiUrl, {
                         method: 'PUT',
                         headers: {
@@ -87,31 +129,23 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: 'Updated site via GrapesJS Admin',
+                            message: `Update ${currentPath} via Admin`,
                             content: encodedContent,
-                            sha: sha
+                            sha: fileData.sha
                         })
                     });
 
-                    if (putRes.ok) alert('Saved! Site updates in ~1 minute.');
-                    else alert('Error saving: ' + (await putRes.json()).message);
+                    if (putRes.ok) alert(`Published ${currentPath}!`);
+                    else alert('Error: ' + (await putRes.json()).message);
 
                 } catch (err) {
-                    alert('Error: ' + err.message);
+                    alert('Save Failed: ' + err.message);
                 }
             }
         });
 
-        // OPTIONAL: Load the current content of root index.html into the editor on startup
-        fetch('../index.html')
-            .then(res => res.text())
-            .then(html => {
-                // Extract only the content inside your site-content div if you have one
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const content = doc.getElementById('site-content')?.innerHTML || html;
-                editor.setComponents(content);
-            });
+        // Initialize file list
+        loadFileList();
     </script>
 </body>
 </html>
