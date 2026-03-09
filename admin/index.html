@@ -19,13 +19,20 @@
             height: '100%',
             fromElement: true,
             storageManager: false,
+            canvas: {
+                styles: [
+                'https://cdn.jsdelivr.net', // Use a specific version for stability
+                ],
+                scripts: [
+                'https://cdn.tailwindcss.com', // Optional: Play CDN for just-in-time (JIT) compilation in dev
+                ],
+            },
         });
 
         // Add the GitHub Save Button
         editor.Panels.addButton('options', [{
             id: 'save-github',
             className: 'fa fa-floppy-o', // Use FontAwesome if you link it, or text
-            label: '<b>SAVE TO GITHUB</b>',
             command: 'save-to-github',
             attributes: { title: 'Commit changes to GitHub' }
         }]);
